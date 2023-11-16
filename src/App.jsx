@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import GlobalStyles from "./styles/GlobalStyles";
 
 // this will return a React component
 const H1 = styled.h1`
@@ -33,12 +34,18 @@ const StyledApp = styled.div`
 
 function App() {
 	return (
-		<StyledApp>
-			<H1>The Cabin Co.</H1>
-			<Button>Check in</Button>
+		<>
+    {/* GlobaStyles component does not accept children and is self closing,
+        has to be a sibling of all other components in the component tree
+    */}
+			<GlobalStyles />
+			<StyledApp>
+				<H1>The Cabin Co.</H1>
+				<Button>Check in</Button>
 
-			<Input type="number" placeholder="Number of guests"></Input>
-		</StyledApp>
+				<Input type="number" placeholder="Number of guests"></Input>
+			</StyledApp>
+		</>
 	);
 }
 
