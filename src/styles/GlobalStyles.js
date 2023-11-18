@@ -1,6 +1,10 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
+/* The vars are called design tokens */
+/* styled components also have a way to create/use design tokens
+called themes, but it was used before CSS vars was introduced
+*/
 :root {
   /* Indigo */
   --color-brand-50: #eef2ff;
