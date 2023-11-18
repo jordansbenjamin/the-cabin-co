@@ -3,6 +3,8 @@ import Row from "../ui/Row";
 
 function Account() {
   return (
+    // Return one element or a fragment
+    // for styling reasons with main and outlet behaviour
     <>
       <Heading as="h1">Update your account</Heading>
 
