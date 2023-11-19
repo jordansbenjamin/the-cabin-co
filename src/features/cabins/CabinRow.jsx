@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import {formatCurrency} from '../../utils/helpers'
+import { formatCurrency } from "../../utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCabin } from "../../services/apiCabins";
 
 const TableRow = styled.div`
 	display: grid;
@@ -43,7 +45,33 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-	const { name, maxCapacity, regularPrice, discount, image } = cabin;
+	const { id: cabinId, name, maxCapacity, regularPrice, discount, image } = cabin;
+
+	const queryClient = useQueryClient();
+
+	// Mutating data with ReactQuery
+	// mutate func is used to connect with the button
+	const { isLoading: isDeleting, mutate } = useMutation({
+		// mutate will call this function
+		// mutationFn: (id) => deleteCabin(id),
+		// This is the same as the above because:
+		// when mutationFn/mutate is later called with
+		// an argument (like mutate(someId)), that argument
+		// is passed to the deleteCabin function. This is because
+		// mutationFn/mutate is essentially a reference to deleteCabin.
+		mutationFn: deleteCabin,
+		// tell ReactQuery what to do as soon as mutation is successful
+		onSuccess: () => {
+			alert("Cabin successfully deleted");
+			// So we want to re-fetch the data, this is done through:
+			// invalidating the cache as soon as mutation is done
+			queryClient.invalidateQueries({
+				// which exact data should be invalidated
+				queryKey: ["cabins"],
+			});
+		},
+		onError: (err) => alert(err.message),
+	});
 
 	return (
 		<TableRow role="row">
@@ -52,7 +80,9 @@ function CabinRow({ cabin }) {
 			<div>Fits up to {maxCapacity} guests</div>
 			<Price>{formatCurrency(regularPrice)}</Price>
 			<Discount>{formatCurrency(discount)}</Discount>
-      <button>Delete</button>
+			<button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+				Delete
+			</button>
 		</TableRow>
 	);
 }

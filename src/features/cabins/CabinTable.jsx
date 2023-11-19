@@ -37,7 +37,7 @@ function CabinTable() {
 	} = useQuery({
 		// queryKey uniquely identifies the data we are going to query
 		// has to be an array with a string or other complexities
-		queryKey: ["cabin"],
+		queryKey: ["cabins"],
 		// queryFn is responsible for querying/fetching data from API
 		// specified func needs to return a promise
 		// whatever data is returned will be store in the cache
