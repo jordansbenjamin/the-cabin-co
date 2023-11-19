@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { HiOutlineCalendarDays, HiOutlineCog6Tooth, HiOutlineHome, HiOutlineHomeModern, HiOutlineUsers } from "react-icons/hi2";
 
 const NavList = styled.ul`
 	display: flex;
@@ -8,6 +9,8 @@ const NavList = styled.ul`
 	gap: 0.8rem;
 `;
 
+// When you use the NavLink component, React router will
+// automatically place the active class on the link that is currently active
 // You can do this to add styles to an existing component
 const StyledNavLink = styled(NavLink)`
 	&:link,
@@ -65,10 +68,34 @@ function MainNav() {
 				{/* We need NavLink by react router in order for routing/linking to work */}
 				<li>
 					{/* Issue is now its not styled, but solution is above */}
-					<StyledNavLink to="/dashboard">Home</StyledNavLink>
+					<StyledNavLink to="/dashboard">
+						<HiOutlineHome />
+						<span>Home</span>
+					</StyledNavLink>
 				</li>
 				<li>
-					<StyledNavLink to="/bookings">Bookings</StyledNavLink>
+					<StyledNavLink to="/bookings">
+						<HiOutlineCalendarDays />
+						<span>Bookings</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to="/cabins">
+						<HiOutlineHomeModern />
+						<span>Cabins</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to="/users">
+						<HiOutlineUsers />
+						<span>Users</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to="/settings">
+						<HiOutlineCog6Tooth />
+						<span>Settings</span>
+					</StyledNavLink>
 				</li>
 			</NavList>
 		</nav>
