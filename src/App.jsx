@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
 		queries: {
 			// stale time is the amount of time
 			// the data in the cache will stay fresh
-			// or stay valid until it is re-fetched
+			// or stay valid until it is automatically re-fetched
 			staleTime: 60 * 1000,
 		},
 	},
