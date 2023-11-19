@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import GlobalStyles from "./styles/GlobalStyles";
 import Dashboard from "./pages/Dashboard";
 import Bookings from "./pages/Bookings";
@@ -10,9 +12,24 @@ import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./ui/AppLayout";
 
+// queryClient basically sets up the cache BTS
+const queryClient = new QueryClient({
+	defaultOptions: {
+		// options for queries
+		queries: {
+			// stale time is the amount of time
+			// the data in the cache will stay fresh
+			// or stay valid until it is re-fetched
+			staleTime: 60 * 1000,
+		},
+	},
+});
+
 function App() {
 	return (
-		<>
+		// Provide query data to entire app tree
+		<QueryClientProvider client={queryClient}>
+			<ReactQueryDevtools initialIsOpen={false}/>
 			<GlobalStyles />
 			<BrowserRouter>
 				<Routes>
@@ -34,7 +51,7 @@ function App() {
 					<Route path="*" element={<PageNotFound />} />
 				</Routes>
 			</BrowserRouter>
-		</>
+		</QueryClientProvider>
 	);
 }
 
