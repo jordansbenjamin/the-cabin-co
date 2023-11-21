@@ -71,7 +71,7 @@ function CreateCabinForm() {
 
 	function onSubmit(data) {
 		// console.log(data);
-		mutate(data);
+		mutate({ ...data, image: data.image[0] });
 	}
 
 	// This func is not that useful because we have errors from formState
@@ -176,7 +176,17 @@ function CreateCabinForm() {
 			</FormRow>
 
 			<FormRow label="Cabin photo" error={errors?.name?.message}>
-				<FileInput id="image" accept="image/*" />
+				<FileInput
+					id="image"
+					accept="image/*"
+					// You can set this in the style component as well
+					// so you dont have to manually set it everytime its used
+					type="file"
+					{...register("image", {
+						// validation
+						required: "This field is required",
+					})}
+				/>
 			</FormRow>
 
 			<FormRow>
