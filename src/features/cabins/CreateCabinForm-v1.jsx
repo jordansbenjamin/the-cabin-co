@@ -1,28 +1,57 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-// External packages
-import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-//
+import styled from "styled-components";
+
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 
-import { createCabin } from "../../services/apiCabins";
+// const FormRow = styled.div`
+// 	display: grid;
+// 	align-items: center;
+// 	grid-template-columns: 24rem 1fr 1.2fr;
+// 	gap: 2.4rem;
 
-function CreateCabinForm({ cabinToEdit = {} }) {
-	const { id: editId, ...editValues } = cabinToEdit;
-	// check if we're editing the form based on editId being provided
-	const isEditSession = Boolean(editId);
+// 	padding: 1.2rem 0;
+
+// 	&:first-child {
+// 		padding-top: 0;
+// 	}
+
+// 	&:last-child {
+// 		padding-bottom: 0;
+// 	}
+
+// 	&:not(:last-child) {
+// 		border-bottom: 1px solid var(--color-grey-100);
+// 	}
+
+// 	&:has(button) {
+// 		display: flex;
+// 		justify-content: flex-end;
+// 		gap: 1.2rem;
+// 	}
+// `;
+
+// const Label = styled.label`
+// 	font-weight: 500;
+// `;
+
+// const Error = styled.span`
+// 	font-size: 1.4rem;
+// 	color: var(--color-red-700);
+// `;
+
+function CreateCabinForm() {
 	// basically react hook form manages controlled components for us
 	// 1) register all input fields that we want react hook form to handle
-	const { register, handleSubmit, reset, getValues, formState } = useForm({
-		defaultValues: isEditSession ? editValues : {},
-	});
+	const { register, handleSubmit, reset, getValues, formState } = useForm();
 
 	const { errors } = formState;
 
@@ -58,6 +87,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 		// in case there is an error with one of the validations
 		// handleSubmit will call the second func (onError) and not onSubmit
 		<Form onSubmit={handleSubmit(onSubmit, onError)}>
+
 			{/* <FormRow>
 				<Label htmlFor="name">Cabin name</Label>
 				<Input
@@ -154,9 +184,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 					type="file"
 					{...register("image", {
 						// validation
-						// Not possible to grab upload image file
-						// so conditionally required validation
-						required: isEditSession ? false : "This field is required",
+						required: "This field is required",
 					})}
 				/>
 			</FormRow>
@@ -166,7 +194,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 				<Button variation="secondary" type="reset">
 					Cancel
 				</Button>
-				<Button disabled={isCreating}>{isEditSession ? "Edit cabin" : "Creat new cabin"}</Button>
+				<Button disabled={isCreating}>Add cabin</Button>
 			</FormRow>
 		</Form>
 	);
