@@ -14,31 +14,25 @@ export async function getCabins() {
 
 export async function createEditCabin(newCabin, id) {
 	// URL format: https://ukdgkdugghmhfkvbfdsd.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg
-	const hasImagePath = newCabin.image?.startWith?.(supabase);
+	const hasImagePath = newCabin.image?.startWith?.(supabaseUrl);
 
 	// Supabase automatically creates folders with forward slashes
 	// thats why we replace it
 	// imageName has to be unique
 	const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll("/", "");
-	const imagePath = hasImagePath ? newCabin.image : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`
+	const imagePath = hasImagePath ? newCabin.image : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
 
 	// 1) Create/edit cabin
 	let query = supabase.from("cabins");
 
 	// A) Create
 	if (!id) {
-		query
-			// inserting this works, because the field names
-			// in the form are identical to the table/column names in supabase
-			// when we create a new row in the table with this insert func
-			// will not immediately return that row
-			// adding .select and .single will return that newly created obj
-			.insert([{ ...newCabin, image: imagePath }]);
+		query = query.insert([{ ...newCabin, image: imagePath }]);
 	}
 
 	// B) Edit
 	if (id) {
-		query.update({ ...newCabin, image: imagePath }).eq("id", id);
+		query = query.update({ ...newCabin, image: imagePath }).eq("id", id);
 	}
 
 	const { data, error } = await query.select().single();

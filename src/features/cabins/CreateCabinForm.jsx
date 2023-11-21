@@ -60,16 +60,17 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 	const isWorking = isCreating || isEditing;
 
 	function onSubmit(data) {
-		// console.log(data);
+		console.log(data);
 
 		// checking if img is file list or url string
 		const image = typeof data.image === "string" ? data.image : data.image[0];
 
 		if (isEditSession) {
-			editCabin({newCabinData: {...data, image }, id: editId});
+			editCabin({ newCabinData: { ...data, image }, id: editId });
+		} else {
+			// createCabin({ ...data, image: data.image[0] });
+			createCabin({ ...data, image });
 		}
-		// createCabin({ ...data, image: data.image[0] });
-		createCabin({ ...data, image });
 	}
 
 	// This func is not that useful because we have errors from formState
