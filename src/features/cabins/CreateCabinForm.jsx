@@ -12,7 +12,7 @@ import Textarea from "../../ui/Textarea";
 import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 
-import { createCabin } from "../../services/apiCabins";
+import { createEditCabin } from "../../services/apiCabins";
 
 function CreateCabinForm({ cabinToEdit = {} }) {
 	const { id: editId, ...editValues } = cabinToEdit;
@@ -29,7 +29,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 	const queryClient = useQueryClient();
 	// whenever we change data, perform CRUD operations, use:
 	const { mutate, isLoading: isCreating } = useMutation({
-		mutationFn: createCabin,
+		mutationFn: createEditCabin,
 		onSuccess: () => {
 			toast.success("New cabin successfully created");
 			// Invalidate queries after creation to re-fetch updated data
