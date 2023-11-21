@@ -13,14 +13,16 @@ export async function getCabins() {
 }
 
 export async function createEditCabin(newCabin, id) {
+	console.log(newCabin, id);
 	// URL format: https://ukdgkdugghmhfkvbfdsd.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg
-	const hasImagePath = newCabin.image?.startWith?.(supabaseUrl);
+	const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
 
 	// Supabase automatically creates folders with forward slashes
 	// thats why we replace it
 	// imageName has to be unique
 	const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll("/", "");
 	const imagePath = hasImagePath ? newCabin.image : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+	console.log(imagePath);
 
 	// 1) Create/edit cabin
 	let query = supabase.from("cabins");
