@@ -3,13 +3,13 @@
 // External packages
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-//
+import toast from "react-hot-toast";
+
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
-import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 
 import { createEditCabin } from "../../services/apiCabins";
@@ -60,7 +60,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 	const isWorking = isCreating || isEditing;
 
 	function onSubmit(data) {
-		console.log(data);
+		// console.log(data);
 
 		// checking if img is file list or url string
 		const image = typeof data.image === "string" ? data.image : data.image[0];
@@ -111,7 +111,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 				/>
 			</FormRow>
 
-			<FormRow label="Maximum capacity" error={errors?.name?.message}>
+			<FormRow label="Maximum capacity" error={errors?.maxCapacity?.message}>
 				<Input
 					type="number"
 					id="maxCapacity"
@@ -127,7 +127,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 				/>
 			</FormRow>
 
-			<FormRow label="Regular price" error={errors?.name?.message}>
+			<FormRow label="Regular price" error={errors?.regularPrice?.message}>
 				<Input
 					type="number"
 					id="regularPrice"
@@ -143,7 +143,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 				/>
 			</FormRow>
 
-			<FormRow label="Discount" error={errors?.name?.message}>
+			<FormRow label="Discount" error={errors?.discount?.message}>
 				<Input
 					type="number"
 					id="discount"
@@ -160,7 +160,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 				/>
 			</FormRow>
 
-			<FormRow label="Description for website" error={errors?.name?.message}>
+			<FormRow label="Description for website" error={errors?.description?.message}>
 				<Textarea
 					type="number"
 					id="description"
@@ -173,7 +173,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 				/>
 			</FormRow>
 
-			<FormRow label="Cabin photo" error={errors?.name?.message}>
+			<FormRow label="Cabin photo" error={errors?.image?.message}>
 				<FileInput
 					id="image"
 					accept="image/*"
