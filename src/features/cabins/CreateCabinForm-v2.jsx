@@ -13,16 +13,8 @@ import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
 
 import { createEditCabin } from "../../services/apiCabins";
-import { useCreateCabin } from "./useCreateCabin";
-import { useEditCabin } from "./useEditCabin";
 
 function CreateCabinForm({ cabinToEdit = {} }) {
-	// BOTH ABSTRACTED
-	const { isCreating, createCabin } = useCreateCabin();
-	const { isEditing, editCabin } = useEditCabin();
-	// To handle both loading conditions
-	const isWorking = isCreating || isEditing;
-
 	const { id: editId, ...editValues } = cabinToEdit;
 	// check if we're editing the form based on editId being provided
 	const isEditSession = Boolean(editId);
@@ -32,41 +24,40 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 		defaultValues: isEditSession ? editValues : {},
 	});
 
-	// This is the error from react hook form, used instead of our own onError handler
 	const { errors } = formState;
 
-	// CREATE ABSTRACTED INTO CUSTOM HOOK
-	// const queryClient = useQueryClient();
-	// // whenever we change data, perform CRUD operations using mutate
-	// // THIS IS CREATE
-	// const { mutate: createCabin, isLoading: isCreating } = useMutation({
-	// 	mutationFn: createEditCabin,
-	// 	onSuccess: () => {
-	// 		toast.success("New cabin successfully created");
-	// 		// Invalidate queries after creation to re-fetch updated data
-	// 		queryClient.invalidateQueries({ queryKey: ["cabins"] });
-	// 		// reset form only when successfuly (thats why not in onSubmit)
-	// 		reset();
-	// 	},
-	// 	onError: (err) => toast.error(err.message),
-	// });
+	const queryClient = useQueryClient();
+	// whenever we change data, perform CRUD operations using mutate
+	// THIS IS CREATE
+	const { mutate: createCabin, isLoading: isCreating } = useMutation({
+		mutationFn: createEditCabin,
+		onSuccess: () => {
+			toast.success("New cabin successfully created");
+			// Invalidate queries after creation to re-fetch updated data
+			queryClient.invalidateQueries({ queryKey: ["cabins"] });
+			// reset form only when successfuly (thats why not in onSubmit)
+			reset();
+		},
+		onError: (err) => toast.error(err.message),
+	});
 
-	// UPDATE ABSTRACTED INTO CUSTOM HOOK
-	// const queryClient = useQueryClient();
-	// // THIS IS UPDATE
-	// const { mutate: editCabin, isLoading: isEditing } = useMutation({
-	// 	// In react query you can only pass one element per function
-	// 	// so have to destructure it
-	// 	mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
-	// 	onSuccess: () => {
-	// 		toast.success("Cabin successfully edited");
-	// 		// Invalidate queries after creation to re-fetch updated data
-	// 		queryClient.invalidateQueries({ queryKey: ["cabins"] });
-	// 		// reset form only when successfuly (thats why not in onSubmit)
-	// 		reset();
-	// 	},
-	// 	onError: (err) => toast.error(err.message),
-	// });
+	// THIS IS UPDATE
+	const { mutate: editCabin, isLoading: isEditing } = useMutation({
+		// In react query you can only pass one element per function
+		// so have to destructure it
+		mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
+		onSuccess: () => {
+			toast.success("Cabin successfully edited");
+			// Invalidate queries after creation to re-fetch updated data
+			queryClient.invalidateQueries({ queryKey: ["cabins"] });
+			// reset form only when successfuly (thats why not in onSubmit)
+			reset();
+		},
+		onError: (err) => toast.error(err.message),
+	});
+
+	// To handle both loading condition
+	const isWorking = isCreating || isEditing;
 
 	function onSubmit(data) {
 		// console.log(data);
@@ -75,32 +66,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 		const image = typeof data.image === "string" ? data.image : data.image[0];
 
 		if (isEditSession) {
-			editCabin(
-				{ newCabinData: { ...data, image }, id: editId },
-				{
-					// also gets access to the data that the mutation function returns
-					onSuccess: (data) => {
-						// console.log(data);
-						reset();
-					},
-				}
-			);
+			editCabin({ newCabinData: { ...data, image }, id: editId });
 		} else {
 			// createCabin({ ...data, image: data.image[0] });
-			createCabin(
-				{ ...data, image },
-				// object of options
-				// since the createCabin mutation is abstracted away into a custom hook
-				// it doesn't have access to the reset function as it comes from useForm
-				// we can use onSuccess handler not only in use mutation but where the mutation occurs
-				{
-					// also gets access to the data that the mutation function returns
-					onSuccess: (data) => {
-						// console.log(data);
-						reset();
-					},
-				}
-			);
+			createCabin({ ...data, image });
 		}
 	}
 
