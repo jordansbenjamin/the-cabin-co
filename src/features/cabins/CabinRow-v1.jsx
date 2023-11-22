@@ -2,9 +2,11 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCabin } from "../../services/apiCabins";
+import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
-import { useDeleteCabin } from "./useDeleteCabin";
 
 const TableRow = styled.div`
 	display: grid;
@@ -47,36 +49,33 @@ const Discount = styled.div`
 
 function CabinRow({ cabin }) {
 	const [showForm, setShowForm] = useState(false);
-	const { isDeleting, deleteCabin } = useDeleteCabin();
-
 	const { id: cabinId, name, maxCapacity, regularPrice, discount, image } = cabin;
 
-	// ABSTRACTED AS A CUSTOM HOOK
-	// const queryClient = useQueryClient();
-	// // Mutating data with ReactQuery
-	// // mutate func is used to connect with the button
-	// const { isLoading: isDeleting, mutate } = useMutation({
-	// 	// mutate will call this function
-	// 	// mutationFn: (id) => deleteCabin(id),
-	// 	// This is the same as the above because:
-	// 	// when mutationFn/mutate is later called with
-	// 	// an argument (like mutate(someId)), that argument
-	// 	// is passed to the deleteCabin function. This is because
-	// 	// mutationFn/mutate is essentially a reference to deleteCabin.
-	// 	mutationFn: deleteCabin,
-	// 	// tell ReactQuery what to do as soon as mutation is successful
-	// 	onSuccess: () => {
-	// 		toast.success("Cabin successfully deleted");
-	// 		// So we want to re-fetch the data, this is done through:
-	// 		// invalidating the cache as soon as mutation is done
-	// 		queryClient.invalidateQueries({
-	// 			// which exact data should be invalidated
-	// 			queryKey: ["cabins"],
-	// 		});
-	// 	},
-	// 	onError: (err) => toast.error(err.message),
-	// });
+	const queryClient = useQueryClient();
 
+	// Mutating data with ReactQuery
+	// mutate func is used to connect with the button
+	const { isLoading: isDeleting, mutate } = useMutation({
+		// mutate will call this function
+		// mutationFn: (id) => deleteCabin(id),
+		// This is the same as the above because:
+		// when mutationFn/mutate is later called with
+		// an argument (like mutate(someId)), that argument
+		// is passed to the deleteCabin function. This is because
+		// mutationFn/mutate is essentially a reference to deleteCabin.
+		mutationFn: deleteCabin,
+		// tell ReactQuery what to do as soon as mutation is successful
+		onSuccess: () => {
+			toast.success("Cabin successfully deleted");
+			// So we want to re-fetch the data, this is done through:
+			// invalidating the cache as soon as mutation is done
+			queryClient.invalidateQueries({
+				// which exact data should be invalidated
+				queryKey: ["cabins"],
+			});
+		},
+		onError: (err) => toast.error(err.message),
+	});
 
 	return (
 		<>
@@ -88,12 +87,12 @@ function CabinRow({ cabin }) {
 				{discount ? <Discount>{formatCurrency(discount)}</Discount> : <span>&mdash;</span>}
 				<div>
 					<button onClick={() => setShowForm((show) => !show)}>Edit</button>
-					<button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
+					<button onClick={() => mutate(cabinId)} disabled={isDeleting}>
 						Delete
 					</button>
 				</div>
 			</TableRow>
-			{showForm && <CreateCabinForm cabinToEdit={cabin} />}
+			{showForm && <CreateCabinForm cabinToEdit={cabin}/>}
 		</>
 	);
 }
