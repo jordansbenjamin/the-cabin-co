@@ -11,6 +11,8 @@ export async function getSettings() {
 }
 
 // We expect a newSetting object that looks like {setting: newValue}
+// which would update the designate field/column that we want to update
+// we dont need to pass in the id to match each row, because its only one setting
 export async function updateSetting(newSetting) {
   const { data, error } = await supabase
     .from("settings")
