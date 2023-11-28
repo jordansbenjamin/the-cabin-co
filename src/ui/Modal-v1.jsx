@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
-import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
@@ -55,51 +54,23 @@ const Button = styled.button`
 	}
 `;
 
-const ModalContext = createContext();
-
-function Modal({ children }) {
-	const [openName, setOpenName] = useState("");
-
-	const close = () => setOpenName("");
-	const open = setOpenName;
-	// const open = (name) => setOpenName(name);
-
-	return <ModalContext.Provider value={{ openName, close, open }}>{children}</ModalContext.Provider>;
-}
-
-function Open({ children, opens: opensWindowName }) {
-	const { open } = useContext(ModalContext);
-
-	// advanced react func: cloneElement
-	// return children;
-	return cloneElement(children, { onClick: () => open(opensWindowName) });
-}
-
-function Window({ children, name }) {
-	const { openName, close } = useContext(ModalContext);
-
-	if (name !== openName) return null;
-
+function Modal({ children, onClose }) {
 	// createPortal recieves as its first argument the JSX that we want to render
 	// and then as the second argument, a DOM node where we want to render this JSX
 	return createPortal(
 		<Overlay>
 			<StyledModal>
-				<Button onClick={close}>
+				<Button onClick={onClose}>
 					<HiXMark />
 				</Button>
-
-				{/* <div>{children}</div> */}
-				{/* We dont know what element to receive so wrap inside div just in case */}
-				{/* To pass in a prop to children */}
-				<div>{cloneElement(children, { onCloseModal: close })}</div>
+				{/* We dont know what element to receive so wrapp inside
+			div just in case.
+		*/}
+				<div>{children}</div>
 			</StyledModal>
-		</Overlay>,
-		document.body
+		</Overlay>
+		// document.body
 	);
 }
-
-Modal.Open = Open;
-Modal.Window = Window;
 
 export default Modal;
