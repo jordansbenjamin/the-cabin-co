@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
-import { cloneElement, createContext, useContext, useState } from "react";
+import { cloneElement, createContext, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
@@ -78,13 +78,32 @@ function Open({ children, opens: opensWindowName }) {
 function Window({ children, name }) {
 	const { openName, close } = useContext(ModalContext);
 
+	const ref = useRef();
+
+	// global event listeners for click event
+	useEffect(() => {
+		function handleClick(e) {
+			// ref.current is the DOM node that references the ref'd element is stored
+			if (ref.current && !ref.current.contains(e.target)) {
+				close();
+			}
+		}
+
+		// Adding true as third arg means the event is handled in the capturing phase
+		// instead of the bubbling phase, so as the event moves down the tree and not up
+		document.addEventListener("click", handleClick, true);
+
+		// remove event listener as component unmounts
+		return () => document.removeEventListener("click", handleClick, true);
+	}, [close]);
+
 	if (name !== openName) return null;
 
 	// createPortal recieves as its first argument the JSX that we want to render
 	// and then as the second argument, a DOM node where we want to render this JSX
 	return createPortal(
 		<Overlay>
-			<StyledModal>
+			<StyledModal ref={ref}>
 				<Button onClick={close}>
 					<HiXMark />
 				</Button>
