@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
+import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
 
@@ -54,7 +55,9 @@ const Button = styled.button`
 `;
 
 function Modal({ children, onClose }) {
-	return (
+	// createPortal recieves as its first argument the JSX that we want to render
+	// and then as the second argument, a DOM node where we want to render this JSX
+	return createPortal(
 		<Overlay>
 			<StyledModal>
 				<Button onClick={onClose}>
@@ -66,6 +69,7 @@ function Modal({ children, onClose }) {
 				<div>{children}</div>
 			</StyledModal>
 		</Overlay>
+		// document.body
 	);
 }
 
