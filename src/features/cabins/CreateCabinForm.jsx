@@ -16,7 +16,7 @@ import { createEditCabin } from "../../services/apiCabins";
 import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
 	// BOTH ABSTRACTED
 	const { isCreating, createCabin } = useCreateCabin();
 	const { isEditing, editCabin } = useEditCabin();
@@ -82,6 +82,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 					onSuccess: (data) => {
 						// console.log(data);
 						reset();
+						onCloseModal?.();
 					},
 				}
 			);
@@ -98,6 +99,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 					onSuccess: (data) => {
 						// console.log(data);
 						reset();
+						onCloseModal?.();
 					},
 				}
 			);
@@ -116,7 +118,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 		// which at this time all validation is executed
 		// in case there is an error with one of the validations
 		// handleSubmit will call the second func (onError) and not onSubmit
-		<Form onSubmit={handleSubmit(onSubmit, onError)}>
+		<Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? "modal" : "regular"}>
 			{/* <FormRow>
 				<Label htmlFor="name">Cabin name</Label>
 				<Input
@@ -222,7 +224,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
 			<FormRow>
 				{/* type is an HTML attribute! */}
-				<Button variation="secondary" type="reset">
+				{/* If onCloseModal is undefined it wont be called because of optional chaining
+					in case that this form is used outside the modal where its not require to close modal
+				*/}
+				<Button variation="secondary" type="reset" onClick={() => onCloseModal?.()}>
 					Cancel
 				</Button>
 				<Button disabled={isWorking}>{isEditSession ? "Edit cabin" : "Creat new cabin"}</Button>
