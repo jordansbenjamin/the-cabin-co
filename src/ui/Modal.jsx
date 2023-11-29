@@ -5,6 +5,7 @@ import { cloneElement, createContext, useContext, useEffect, useRef, useState } 
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
 	position: fixed;
@@ -78,24 +79,7 @@ function Open({ children, opens: opensWindowName }) {
 function Window({ children, name }) {
 	const { openName, close } = useContext(ModalContext);
 
-	const ref = useRef();
-
-	// global event listeners for click event
-	useEffect(() => {
-		function handleClick(e) {
-			// ref.current is the DOM node that references the ref'd element is stored
-			if (ref.current && !ref.current.contains(e.target)) {
-				close();
-			}
-		}
-
-		// Adding true as third arg means the event is handled in the capturing phase
-		// instead of the bubbling phase, so as the event moves down the tree and not up
-		document.addEventListener("click", handleClick, true);
-
-		// remove event listener as component unmounts
-		return () => document.removeEventListener("click", handleClick, true);
-	}, [close]);
+	const ref = useOutsideClick(close);
 
 	if (name !== openName) return null;
 
