@@ -6,22 +6,24 @@ import CreateCabinForm from "./CreateCabinForm";
 // adapating modal to compound component pattern
 function AddCabin() {
 	return (
-		<Modal>
-			<Modal.Open opens="cabin-form">
-				<Button>Add new cabin</Button>
-			</Modal.Open>
-			<Modal.Window name="cabin-form">
-				<CreateCabinForm />
-			</Modal.Window>
+		<div className="">
+			<Modal>
+				<Modal.Open opens="cabin-form">
+					<Button>Add new cabin</Button>
+				</Modal.Open>
+				<Modal.Window name="cabin-form">
+					<CreateCabinForm />
+				</Modal.Window>
 
-			{/* You can have multiple windows in the same model component */}
-			{/* <Modal.Open opens="table">
+				{/* You can have multiple windows in the same model component */}
+				{/* <Modal.Open opens="table">
 				<Button>Add new cabin</Button>
 			</Modal.Open>
 			<Modal.Window name="table">
 				<CreateCabinForm />
 			</Modal.Window> */}
-		</Modal>
+			</Modal>
+		</div>
 	);
 }
 
