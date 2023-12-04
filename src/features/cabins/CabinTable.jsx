@@ -55,7 +55,7 @@ function CabinTable() {
 		// role makes HTML more accessible
 		// because it will function as a table but its not using
 		// the HTML table element
-		<Table columns='0.6fr 1.8fr 2.2fr 1fr 1fr 1fr'>
+		<Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
 			<Table.Header>
 				<div></div>
 				<div>Cabin</div>
@@ -64,10 +64,20 @@ function CabinTable() {
 				<div>Discount</div>
 				<div></div>
 			</Table.Header>
-			
-			{cabins.map((cabin) => (
-				<CabinRow cabin={cabin} key={cabin.id} />
-			))}
+
+			{/* You could do this, but theres a better way */}
+			{/* <Table.Body>
+				{cabins.map((cabin) => (
+					<CabinRow cabin={cabin} key={cabin.id} />
+				))}
+			</Table.Body> */}
+
+			{/* using render prop pattern */}
+			<Table.Body data={cabins} render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />} />
+
+			{/* {cabins.map((cabin) => (
+					<CabinRow cabin={cabin} key={cabin.id} />
+				))} */}
 		</Table>
 	);
 }
