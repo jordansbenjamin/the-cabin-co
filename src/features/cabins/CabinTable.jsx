@@ -55,20 +55,29 @@ function CabinTable() {
 		return <Spinner />;
 	}
 
+	// 1) Filter
 	const filterValue = searchParams.get("discount") || "all";
 
 	let filteredCabins;
-	if (filterValue === 'all') {
+	if (filterValue === "all") {
 		filteredCabins = cabins;
 	}
 
-	if (filterValue === 'no-discount') {
-		filteredCabins = cabins.filter((cabin) => cabin.discount === 0)
+	if (filterValue === "no-discount") {
+		filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
 	}
 
-	if (filterValue === 'with-discount') {
-		filteredCabins = cabins.filter((cabin) => cabin.discount > 0)
+	if (filterValue === "with-discount") {
+		filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
 	}
+
+	// 2) SORT
+	const sortBy = searchParams.get("sortBy") || "startDate-asc";
+	const [field, direction] = sortBy.split("-");
+	// to change value to negative/positive
+	const modifier = direction === "asc" ? 1 : -1;
+	// based on previous step from filtered to sorted
+	const sortedCabins = filteredCabins.sort((a, b) => (a[field] - b[field]) * modifier);
 
 	return (
 		// role makes HTML more accessible
@@ -93,7 +102,11 @@ function CabinTable() {
 			</Table.Body> */}
 
 				{/* using render prop pattern */}
-				<Table.Body data={filteredCabins} render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />} />
+				<Table.Body
+					// data={filteredCabins}
+					data={sortedCabins}
+					render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
+				/>
 
 				{/* {cabins.map((cabin) => (
 					<CabinRow cabin={cabin} key={cabin.id} />
