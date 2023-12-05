@@ -5,6 +5,7 @@ import CabinRow from "./CabinRow";
 import { useCabins } from "./useCabins";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
+import { useSearchParams } from "react-router-dom";
 
 // const Table = styled.div`
 // 	border: 1px solid var(--color-grey-200);
@@ -33,6 +34,8 @@ const TableHeader = styled.header`
 function CabinTable() {
 	const { isLoading, cabins } = useCabins();
 
+	const [searchParams] = useSearchParams();
+
 	// ABSTRACTED AWAY INTO CUSTOM HOOK
 	// const {
 	// 	isLoading,
@@ -50,6 +53,21 @@ function CabinTable() {
 
 	if (isLoading) {
 		return <Spinner />;
+	}
+
+	const filterValue = searchParams.get("discount") || "all";
+
+	let filteredCabins;
+	if (filterValue === 'all') {
+		filteredCabins = cabins;
+	}
+
+	if (filterValue === 'no-discount') {
+		filteredCabins = cabins.filter((cabin) => cabin.discount === 0)
+	}
+
+	if (filterValue === 'with-discount') {
+		filteredCabins = cabins.filter((cabin) => cabin.discount > 0)
 	}
 
 	return (
@@ -75,7 +93,7 @@ function CabinTable() {
 			</Table.Body> */}
 
 				{/* using render prop pattern */}
-				<Table.Body data={cabins} render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />} />
+				<Table.Body data={filteredCabins} render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />} />
 
 				{/* {cabins.map((cabin) => (
 					<CabinRow cabin={cabin} key={cabin.id} />
