@@ -4,6 +4,7 @@ import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 import { useCabins } from "./useCabins";
 import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 // const Table = styled.div`
 // 	border: 1px solid var(--color-grey-200);
@@ -55,30 +56,32 @@ function CabinTable() {
 		// role makes HTML more accessible
 		// because it will function as a table but its not using
 		// the HTML table element
-		<Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
-			<Table.Header>
-				<div></div>
-				<div>Cabin</div>
-				<div>Capacity</div>
-				<div>Price</div>
-				<div>Discount</div>
-				<div></div>
-			</Table.Header>
+		<Menus>
+			<Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
+				<Table.Header>
+					<div></div>
+					<div>Cabin</div>
+					<div>Capacity</div>
+					<div>Price</div>
+					<div>Discount</div>
+					<div></div>
+				</Table.Header>
 
-			{/* You could do this, but theres a better way */}
-			{/* <Table.Body>
+				{/* You could do this, but theres a better way */}
+				{/* <Table.Body>
 				{cabins.map((cabin) => (
 					<CabinRow cabin={cabin} key={cabin.id} />
 				))}
 			</Table.Body> */}
 
-			{/* using render prop pattern */}
-			<Table.Body data={cabins} render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />} />
+				{/* using render prop pattern */}
+				<Table.Body data={cabins} render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />} />
 
-			{/* {cabins.map((cabin) => (
+				{/* {cabins.map((cabin) => (
 					<CabinRow cabin={cabin} key={cabin.id} />
 				))} */}
-		</Table>
+			</Table>
+		</Menus>
 	);
 }
 
